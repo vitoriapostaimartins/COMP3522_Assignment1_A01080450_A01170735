@@ -3,6 +3,9 @@ This module houses the FAM - the controller of the program.
 """
 
 from user import User
+from angel import Angel
+from troublemaker import Troublemaker
+from rebel import Rebel
 
 
 def load_test_user():
@@ -38,8 +41,35 @@ class FAM:
         """
 
         # register the user
-        test_user = load_test_user()
-        self.add_user_to_list(test_user)
+        self.register_user()
+
+        # load test user
+        # test_user = load_test_user()
+        # self.add_user_to_list(test_user)
+
+    def register_user(self):
+        """
+
+        :return:
+        """
+        ## user name, age, type bank account number, bank name, bank balance, their budgets
+        print("Complete the following details for registration")
+        user_name = input("Enter your Name:")
+        user_age = int(input("Enter your Age:"))
+        user_type = int(input("""Enter your User Type:
+                          1 - Angel
+                          2 - Troublemaker
+                          3 - Rebel
+                          """))
+
+        if user_type == 1:
+            user = Angel(user_name, user_age)
+        elif user_type == 2:
+            user = Troublemaker(user_name, user_age)
+        elif user_type == 3:
+            user = Rebel(user_name, user_age)
+
+        self.add_user_to_list(user)
 
     @property
     def user_list(self):

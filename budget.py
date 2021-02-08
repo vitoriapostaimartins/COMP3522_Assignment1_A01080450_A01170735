@@ -9,6 +9,7 @@ class Budget:
     allow a user to record and view transactions, and view amount
     spent in the budget.
     """
+
     def __init__(self, name, limit):
         """
         Initialize a new Budget with a name, limit, list of transactions,
@@ -20,7 +21,7 @@ class Budget:
         self._limit = limit
         self._transactions = []
         self._amount_spent = 0
-        self._amount_left = 0
+        self._amount_left = limit
 
     @property
     def transactions(self):
@@ -62,6 +63,10 @@ class Budget:
         """
         return self._amount_spent
 
+    @amount_spent.setter
+    def amount_spent(self, amount):
+        self._amount_spent = amount
+
     @property
     def amount_left(self):
         """
@@ -69,6 +74,10 @@ class Budget:
         :return: a float
         """
         return self._amount_left
+
+    @amount_left.setter
+    def amount_left(self, amount):
+        self._amount_left = amount
 
     @property
     def limit(self):
@@ -86,6 +95,10 @@ class Budget:
         :return name: the name of the Budget, as a String
         """
         return self._name
+
+    def update_balance(self, amount):
+        self.amount_spent += amount
+        self.amount_left -= amount
 
     def __str__(self):
         return f"""The budget {self.name} has a limit of {self.limit}. The user has spent {self.amount_spent} dollars 

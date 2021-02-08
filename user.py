@@ -2,12 +2,14 @@
 This module holds the User class.
 """
 from bankaccount import BankAccount
+from abc import ABC
 
 
-class User:
+class User(ABC):
     """
     The User class is the blueprint for creating a User object.
     """
+
     def __init__(self, name, age):
         """
         Initialize the instance variables name, age and bank.
@@ -37,6 +39,7 @@ class User:
         bank_number = input("Please enter the bank number: ")
         name = input("Please enter the name of the bank: ")
         balance = float(input("Please enter the bank balance: "))
+
         return User.create_bank_account(bank_number, name, balance)
 
     @staticmethod

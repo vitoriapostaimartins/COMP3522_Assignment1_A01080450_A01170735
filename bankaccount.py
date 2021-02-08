@@ -6,6 +6,7 @@ from budget import Budget
 from datetime import datetime
 
 
+
 class BankAccount:
     """
     Class representing a BankAccount for a user, with methods to
@@ -19,13 +20,28 @@ class BankAccount:
         :param name: a string
         :param balance: a float
         """
-        self.__budgets = [Budget("Games and Entertainment", 123.12),
-                          Budget("Clothing and Accessories", 100),
-                          Budget("Eating Out", 200),
-                          Budget("Miscellaneous", 50)]
+        # self.__budgets = [Budget("Games and Entertainment", 0),
+        #                   Budget("Clothing and Accessories", 0),
+        #                   Budget("Eating Out", 0),
+        #                   Budget("Miscellaneous", 0)]
+        self.__budgets = self.input_budget_details()
         self.__number = number
         self.__name = name
         self.__balance = balance
+
+    @staticmethod
+    def input_budget_details():
+        budget_list = []
+        print("\nEnter the budget limit for the given category:")
+        cat_one = float(input("Games and Entertainment: "))
+        budget_list.append(Budget("Games and Entertainment", cat_one))
+        cat_two = float(input("Clothing and Accessories: "))
+        budget_list.append(Budget("Clothing and Accessories", cat_two))
+        cat_three = float(input("Eating Out: "))
+        budget_list.append(Budget("Eating Out", cat_three))
+        cat_four = float(input("Miscellaneous: "))
+        budget_list.append(Budget("Miscellaneous", cat_four))
+        return budget_list
 
     @property
     def budgets(self):
@@ -34,6 +50,19 @@ class BankAccount:
         :return: list of Budgets
         """
         return self.__budgets
+
+    # @property.setter
+    # def budgets(self, budget1, budget2, budget3, budget4):
+    #
+
+    @property
+    def balance(self):
+        return self.__balance
+
+    @balance.setter
+    def balance(self, amount):
+        self.__balance = amount
+
 
     def get_budget_by_index(self, index):
         """
@@ -65,7 +94,19 @@ class BankAccount:
         purchase_location = input("Enter the purchase location: ")
         timestamp = datetime.now()
 
+        self._update_balance(amount, budget_index)
+
         self.get_budget_by_index(budget_index - 1).record_transaction(timestamp, amount, purchase_location)
+
+    def _update_balance(self, amount, budget):
+        """
+        Update the bank and budget balance based on the amount recorded in a transaction.
+        :param amount:
+        :param budget:
+        :return:
+        """
+        self.balance = self.balance - amount
+        self.get_budget_by_index(budget - 1).update_balance(amount)
 
     def view_budgets(self):
         """
@@ -86,4 +127,4 @@ class BankAccount:
                f"---------------------------- \n" \
                f"\nNumber: {self.__number}\n" \
                f"Name: {self.__name}\n" \
-               f"Balance: {self.__balance}\n"
+               f"Balance: {self.balance}\n"
