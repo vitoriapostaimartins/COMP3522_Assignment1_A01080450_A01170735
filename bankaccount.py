@@ -6,12 +6,12 @@ from budget import Budget
 from datetime import datetime
 
 
-
 class BankAccount:
     """
     Class representing a BankAccount for a user, with methods to
     record and view transactions.
     """
+
     def __init__(self, number, name, balance):
         """
         Initialize a BankAccount with a budget list, account number,
@@ -63,7 +63,6 @@ class BankAccount:
     def balance(self, amount):
         self.__balance = amount
 
-
     def get_budget_by_index(self, index):
         """
         Return a budget from the budget list by index.
@@ -83,9 +82,15 @@ class BankAccount:
               "2 - Clothing and Accessories\n"
               "3 - Eating Out\n"
               "4 - Miscellaneous")
-        return int(input("Please enter one of the options above:"))
+        while True:
+            option = int(input("Please enter one of the options above:"))
+            if 0 < option < 5:
+                break
+            else:
+                print("Option invalid")
+        return option
 
-    def record_transaction(self):
+    def record_transaction(self, user):
         """
         Record a new transaction in a budget.
         """
@@ -93,10 +98,29 @@ class BankAccount:
         amount = float(input("Enter the amount: "))
         purchase_location = input("Enter the purchase location: ")
         timestamp = datetime.now()
+        budget = self.get_budget_by_index(budget_index - 1)
 
-        self._update_balance(amount, budget_index)
+        if self.__balance < amount:
+            raise InvalidTransactionError("Transaction not processed. Amount would put balance below 0.")
+        else:
+            self._update_balance(amount, budget_index)
+            budget.record_transaction(timestamp, amount, purchase_location)
 
-        self.get_budget_by_index(budget_index - 1).record_transaction(timestamp, amount, purchase_location)
+        self.on_transaction_complete(user, budget)
+
+    def on_transaction_complete(self, user, budget):
+        print("Transaction successful.")
+        budget_balance = budget.amount_left
+        # check if the budget is exceeded
+        if budget_balance < 0:
+            # yes - get notification
+            print(user.get_notification())
+
+        # check if the budget is almost exceeded
+        percent = (budget.amount_spent / budget.limit) * 100
+        if percent > user.get_percentage_warning():
+            print(user.get_warning())
+
 
     def _update_balance(self, amount, budget):
         """
@@ -120,7 +144,7 @@ class BankAccount:
         Print all of the transactions in a specific budget.
         """
         budget_index = BankAccount.get_budget_index()
-        self.get_budget_by_index(budget_index-1).print_transactions()
+        self.get_budget_by_index(budget_index - 1).print_transactions()
 
     def __str__(self):
         return f"Viewing Bank Account Details \n" \
@@ -128,3 +152,8 @@ class BankAccount:
                f"\nNumber: {self.__number}\n" \
                f"Name: {self.__name}\n" \
                f"Balance: {self.balance}\n"
+
+
+class InvalidTransactionError(Exception):
+    def __init__(self, message):
+        super().__init__(message)

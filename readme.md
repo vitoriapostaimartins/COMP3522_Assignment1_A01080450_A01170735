@@ -5,19 +5,19 @@ Current Progress
 - [ ] **Recording Transactions**
   - [x] Record & display transactions for a Budget
   - [x] Update Bank Account balance with each transaction
-  - [ ] User cant record transaction that will cause balance to fall below 0
+  - [x] User cant record transaction that will cause balance to fall below 0
 - [x] **User Registration**
   - register different User Types
-- [ ] **Main Menu**
+- [x] **Main Menu**
   - display on startup
   ```python
     1 - Register new user
     2 - Login
     3 - Exit
   ```
-- [ ] **User Login**
+- [x] **User Login**
   - store registered users in list, allow login functionality
-- [ ] **Login Menu**
+- [x] **Login Menu**
   - display if login chosen from main menu
   ```python
     1 - Jeff (Rebel)
@@ -26,11 +26,11 @@ Current Progress
     4 - Back to main menu
   ```
 - [ ] **Notifications**
-  - [ ] Enum to store message types
-  - [ ] Perform check after transaction to see if warning or notification should be issued
-    - [ ] Notify if exceed budget category
+  - [x] Enum to store message types
+  - [x] Perform check after transaction to see if warning or notification should be issued
+    - [x] Notify if exceed budget category TEST
          - polite or rude message
-    - [ ] Warning if exceed a % of budget
+    - [x] Warning if exceed a % of budget TEST
       - Angel: >90%
       - Troublemaker: >70%
       - Rebel: >50%

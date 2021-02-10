@@ -47,6 +47,7 @@ class Budget:
         """
         transaction = Transaction(self._name, timestamp, amount, purchase_location)
         self.add_to_transaction(transaction)
+        return transaction
 
     def print_transactions(self):
         """

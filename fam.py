@@ -27,6 +27,15 @@ class FAM:
         Initialize the user list.
         """
         self._user_list = []
+        self._current_user = None
+
+    @property
+    def current_user(self):
+        return self._current_user
+
+    @current_user.setter
+    def current_user(self, user):
+        self._current_user = user
 
     def add_user_to_list(self, user):
         """
@@ -69,7 +78,9 @@ class FAM:
         elif user_type == 3:
             user = Rebel(user_name, user_age)
 
+        self.current_user = user
         self.add_user_to_list(user)
+        return True
 
     @property
     def user_list(self):
@@ -78,6 +89,10 @@ class FAM:
         :return: the user list as an array
         """
         return self._user_list
+
+    @user_list.setter
+    def user_list(self, list):
+        self._user_list = list
 
     def show_actions_menu(self):
         """
@@ -92,16 +107,16 @@ class FAM:
             2 - Record transaction
             3 - View transactions by budget
             4 - View bank account details
-            5 - Quit
+            5 - Logout
             """)
 
             option = int(input("Please enter the number your selection: "))
-            # option 5 = QUIT = break the loop
+            # option 5 = LOGOUT, back to main menu
             if option == 5:
-                break
-
-            # performs the action selected by the user.
-            self.perform_action(option)
+                return
+            else:
+                # performs the action selected by the user.
+                self.perform_action(option)
 
     def perform_action(self, option):
         """
@@ -109,13 +124,73 @@ class FAM:
         :param option: an int
         """
         if option == 1:
-            self.user_list[0].view_budgets()
+            self.current_user.view_budgets()
         elif option == 2:
-            self.user_list[0].record_transaction()
+            self.current_user.record_transaction()
         elif option == 3:
-            self.user_list[0].view_transactions()
+            self.current_user.view_transactions()
         elif option == 4:
-            self.user_list[0].view_bank_details()
+            self.current_user.view_bank_details()
+
+    def login_user(self):
+        """
+        Select a user from the user list to log in.
+        """
+        # Display list of users and prompt an input
+        print("---- Login Menu ----")
+        for user in self.user_list:
+            print(f"{self.user_list.index(user) + 1} - {user.name} ({user.get_type()})")
+
+        # Exit if the last option is chosen
+        choice_exit = len(self.user_list) + 1
+        print(f"{choice_exit} - Back to main menu")
+
+        valid_users = range(1, len(self.user_list))
+
+        while True:
+            choice = int(input("Choose a user by entering the id: "))
+
+            # Loop until a valid user is selected
+            if choice in valid_users:
+                break
+            elif choice == choice_exit:
+                return False
+            else:
+                print("Please enter a valid option")
+
+        # Set current user to selected user
+        self.current_user = self.user_list[choice - 1]
+        print(f"\nLogged in as {self.current_user.name}")
+        return True
+
+    def show_main_menu(self):
+        """
+        Show the main menu with options to register a new user,
+        login, or exit the FAM application.
+        """
+        # Prompt user to register or login
+        while True:
+
+            print("""
+                    1 - Register new user
+                    2 - Login
+                    3 - Exit
+                  """)
+
+            choice = int(input("Enter your choice: "))
+
+            if choice == 3:
+                return
+            elif 0 > choice > 3:
+                print("Invalid")
+            else:
+                input_map = {
+                    1: self.register_user,
+                    2: self.login_user,
+                }
+                operation = input_map[choice]
+                if operation():
+                    self.show_actions_menu()
 
 
 def main():
@@ -125,11 +200,14 @@ def main():
 
     fam = FAM()
 
+    # show main menu
+    fam.show_main_menu()
+
     # registers a user
-    fam.show_registration_menu()
+    # fam.show_registration_menu()
 
     # shows the actions menu
-    fam.show_actions_menu()
+    # fam.show_actions_menu()
 
 
 if __name__ == '__main__':
