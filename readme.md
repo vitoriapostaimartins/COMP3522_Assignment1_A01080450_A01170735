@@ -3,7 +3,8 @@ Current Progress
 - [x] **Show user menu**
   - View Budgets, Record Transaction, View Transactions by Budget, View Bank Account Details
 - [ ] **Recording Transactions**
-  - [ ] Record & display transactions for a Budget
+  - [x] Record & display transactions for a Budget
+  - [x] Update Bank Account balance with each transaction
   - [ ] User cant record transaction that will cause balance to fall below 0
 - [x] **User Registration**
   - register different User Types
@@ -25,19 +26,23 @@ Current Progress
     4 - Back to main menu
   ```
 - [ ] **Notifications**
-  - Enum to store message types
-  - notify if exceed budget category
-    - polite or rude message
-  - warning if exceed a % of budget
-    - Angel: >90%
-    - Troublemaker: >70%
-    - Rebel: >50%
+  - [ ] Enum to store message types
+  - [ ] Perform check after transaction to see if warning or notification should be issued
+    - [ ] Notify if exceed budget category
+         - polite or rude message
+    - [ ] Warning if exceed a % of budget
+      - Angel: >90%
+      - Troublemaker: >70%
+      - Rebel: >50%
+    - [ ] Print list of transactions
+        - After warning that they are close to exceeding budget for a category
+        - After notification that they have exceeded budget for a category
 - [ ] **Lockout - Budget**
   - for Troublemaker and Rebel
-  - lock out from recording transactions (i.e. spending money)
+  - [ ] Lock out from recording transactions (i.e. spending money)
     - Troublemaker: if exceed >120%
     - Rebel: if exceed >100%
-  - notify via console message
-  - deny attempts at recording transactions in affected budget
+  - [ ] Notify via console message
+  - [ ] Deny attempts at recording transactions in affected budget
 - [ ] **Lockout - Account (Rebel)**
     - exceed budget in 2+ categories = lock out from account
