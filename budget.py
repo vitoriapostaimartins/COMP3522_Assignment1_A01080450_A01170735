@@ -22,6 +22,16 @@ class Budget:
         self._transactions = []
         self._amount_spent = 0
         self._amount_left = limit
+        self._is_locked = False
+
+
+    @property
+    def is_locked(self):
+        return self._is_locked;
+
+    @is_locked.setter
+    def is_locked(self, value):
+        self._is_locked = value
 
     @property
     def transactions(self):

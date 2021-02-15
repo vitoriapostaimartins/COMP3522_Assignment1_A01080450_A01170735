@@ -25,7 +25,7 @@ Current Progress
     3 - Shachi (Angel)
     4 - Back to main menu
   ```
-- [ ] **Notifications**
+- [x] **Notifications**
   - [x] Enum to store message types
   - [x] Perform check after transaction to see if warning or notification should be issued
     - [x] Notify if exceed budget category TEST
@@ -34,9 +34,10 @@ Current Progress
       - Angel: >90%
       - Troublemaker: >70%
       - Rebel: >50%
-    - [ ] Print list of transactions
+    - [x] Print list of transactions
         - After warning that they are close to exceeding budget for a category
         - After notification that they have exceeded budget for a category
+  
 - [ ] **Lockout - Budget**
   - for Troublemaker and Rebel
   - [ ] Lock out from recording transactions (i.e. spending money)
@@ -44,5 +45,6 @@ Current Progress
     - Rebel: if exceed >100%
   - [ ] Notify via console message
   - [ ] Deny attempts at recording transactions in affected budget
+  
 - [ ] **Lockout - Account (Rebel)**
     - exceed budget in 2+ categories = lock out from account

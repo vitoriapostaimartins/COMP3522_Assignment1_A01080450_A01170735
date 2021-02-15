@@ -4,7 +4,7 @@ This module holds the User class.
 import abc
 
 from Assignments.Assignment1.notifications import Notifications
-from bankaccount import BankAccount
+from bankaccount import BankAccount, BudgetIsLockedError
 from bankaccount import InvalidTransactionError
 from abc import ABC
 
@@ -14,7 +14,7 @@ class User(ABC):
     The User class is the blueprint for creating a User object.
     """
 
-    def __init__(self, name, age, warning):
+    def __init__(self, name, age, warning, is_lockable, lock_limit):
         """
         Initialize the instance variables name, age and bank.
         :param name: the name of the user as a String
@@ -23,6 +23,9 @@ class User(ABC):
         self._name = name
         self._age = age
         self._percentage_warning = warning
+        self._is_lockable = is_lockable
+        self._lock_limit = lock_limit
+        self._locked_budgets = 0 # QUESTION do we keep it in user or in rebel
 
         # creating the user's bank account
         self.__bank = self.input_bank_details()
@@ -32,6 +35,18 @@ class User(ABC):
 
     def get_warning(self):
         return Notifications.WARNING.value
+
+    def increment_locked_budgets(self):
+        self._locked_budgets += 1
+
+    def get_lock_limit(self):
+        return self._lock_limit
+
+    def get_locked_budgets(self):
+        return self._locked_budgets
+
+    def get_is_lockable(self): #    QUESTION: should we make only properties/getters/setters?
+        return self._is_lockable
 
     @abc.abstractmethod
     def get_type(self):
@@ -94,6 +109,8 @@ class User(ABC):
             self.bank.record_transaction(self)
         except InvalidTransactionError as e:
             print(e)
+        except BudgetIsLockedError as e:
+            print(e)
 
     def view_bank_details(self):
         """
@@ -104,3 +121,11 @@ class User(ABC):
     @abc.abstractmethod
     def get_notification(self):
         pass
+
+    @abc.abstractmethod
+    def can_lock_account(self):
+        pass
+
+class UserIsLockedError(Exception):
+    def __init__(self, message):
+        super().__init__(message)

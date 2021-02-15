@@ -95,31 +95,50 @@ class BankAccount:
         Record a new transaction in a budget.
         """
         budget_index = BankAccount.get_budget_index()
+        budget = self.get_budget_by_index(budget_index - 1)
+        if budget.is_locked:
+            raise BudgetIsLockedError(f"Budget {budget.name} is locked.")
+
         amount = float(input("Enter the amount: "))
         purchase_location = input("Enter the purchase location: ")
         timestamp = datetime.now()
-        budget = self.get_budget_by_index(budget_index - 1)
 
-        if self.__balance < amount:
-            raise InvalidTransactionError("Transaction not processed. Amount would put balance below 0.")
+
+        # If the budget is locked, don't continue transaction
+        if budget.is_locked:
+            raise BudgetIsLockedError("Budget is locked.")
+
+        # if percent > user.get_lock_limit():
+
         else:
-            self._update_balance(amount, budget_index)
-            budget.record_transaction(timestamp, amount, purchase_location)
-
-        self.on_transaction_complete(user, budget)
+            if self.__balance < amount:
+                raise InvalidTransactionError("Transaction not processed. Amount would put balance below 0.")
+            else:
+                self._update_balance(amount, budget_index)
+                budget.record_transaction(timestamp, amount, purchase_location)
+                self.on_transaction_complete(user, budget)
 
     def on_transaction_complete(self, user, budget):
         print("Transaction successful.")
         budget_balance = budget.amount_left
+        percent = (budget.amount_spent / budget.limit) * 100
+
+        if percent > user.get_lock_limit() and user.get_is_lockable():
+            budget.is_locked = True
+            user.increment_locked_budgets()
+            print(f"Budget {budget.name} is locked")
+
         # check if the budget is exceeded
-        if budget_balance < 0:
-            # yes - get notification
+        elif budget_balance < 0:
+            # yes - get notification and print transactions
             print(user.get_notification())
+            budget.print_transactions()
 
         # check if the budget is almost exceeded
-        percent = (budget.amount_spent / budget.limit) * 100
-        if percent > user.get_percentage_warning():
+        elif percent > user.get_percentage_warning():
+            # yes - get warning and print transactions
             print(user.get_warning())
+            budget.print_transactions()
 
 
     def _update_balance(self, amount, budget):
@@ -155,5 +174,9 @@ class BankAccount:
 
 
 class InvalidTransactionError(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+class BudgetIsLockedError(Exception):
     def __init__(self, message):
         super().__init__(message)

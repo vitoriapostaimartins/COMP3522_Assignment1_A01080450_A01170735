@@ -2,7 +2,7 @@
 This module houses the FAM - the controller of the program.
 """
 
-from user import User
+from user import User, UserIsLockedError
 from angel import Angel
 from troublemaker import Troublemaker
 from rebel import Rebel
@@ -61,7 +61,6 @@ class FAM:
 
         :return:
         """
-        ## user name, age, type bank account number, bank name, bank balance, their budgets
         print("Complete the following details for registration")
         user_name = input("Enter your Name:")
         user_age = int(input("Enter your Age:"))
@@ -91,8 +90,8 @@ class FAM:
         return self._user_list
 
     @user_list.setter
-    def user_list(self, list):
-        self._user_list = list
+    def user_list(self, user_list):
+        self._user_list = user_list
 
     def show_actions_menu(self):
         """
@@ -100,6 +99,11 @@ class FAM:
         :return:
         """
         while True:
+            # Check if a user is locked, if so exit out of the actions menu
+            print("locked:", self.current_user.get_locked_budgets())
+            if self.current_user.can_lock_account():
+                raise UserIsLockedError("Your account is locked. We have logged you out")
+
             # options:
             print("""
             Actions menu:
@@ -145,7 +149,8 @@ class FAM:
         choice_exit = len(self.user_list) + 1
         print(f"{choice_exit} - Back to main menu")
 
-        valid_users = range(1, len(self.user_list))
+        valid_users = range(1, len(self.user_list) + 1)
+        print(x for x in valid_users)
 
         while True:
             choice = int(input("Choose a user by entering the id: "))
@@ -190,7 +195,10 @@ class FAM:
                 }
                 operation = input_map[choice]
                 if operation():
-                    self.show_actions_menu()
+                    try:
+                        self.show_actions_menu()
+                    except UserIsLockedError as e:
+                        print(e)
 
 
 def main():
