@@ -25,7 +25,7 @@ class User(ABC):
         self._percentage_warning = warning
         self._is_lockable = is_lockable
         self._lock_limit = lock_limit
-        self._locked_budgets = 0 # QUESTION do we keep it in user or in rebel
+        self._locked_budgets = 0  # QUESTION do we keep it in user or in rebel
 
         # creating the user's bank account
         self.__bank = self.input_bank_details()
@@ -45,7 +45,7 @@ class User(ABC):
     def get_locked_budgets(self):
         return self._locked_budgets
 
-    def get_is_lockable(self): #    QUESTION: should we make only properties/getters/setters?
+    def get_is_lockable(self):  # QUESTION: should we make only properties/getters/setters?
         return self._is_lockable
 
     @abc.abstractmethod
@@ -74,10 +74,16 @@ class User(ABC):
         Input the user for details and creates a bank account object with the details.
         return: the newly created bank account
         """
-        bank_number = input("Please enter the bank number: ")
-        name = input("Please enter the name of the bank: ")
-        balance = float(input("Please enter the bank balance: "))
-
+        while True:
+            try:
+                bank_number = input("Please enter the bank number: ")
+                name = input("Please enter the name of the bank: ")
+                balance = float(input("Please enter the bank balance: "))
+            except ValueError:
+                print("One or more of the values was invalid. Please try again.")
+                continue
+            else:
+                break
         return User.create_bank_account(bank_number, name, balance)
 
     @staticmethod
@@ -125,6 +131,10 @@ class User(ABC):
     @abc.abstractmethod
     def can_lock_account(self):
         pass
+
+    def __str__(self):
+        return f"{self._name}  ({self.get_type()})"
+
 
 class UserIsLockedError(Exception):
     def __init__(self, message):

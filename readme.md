@@ -38,13 +38,44 @@ Current Progress
         - After warning that they are close to exceeding budget for a category
         - After notification that they have exceeded budget for a category
   
-- [ ] **Lockout - Budget**
+- [x] **Lockout - Budget**
   - for Troublemaker and Rebel
-  - [ ] Lock out from recording transactions (i.e. spending money)
+  - [x] Lock out from recording transactions (i.e. spending money)
     - Troublemaker: if exceed >120%
     - Rebel: if exceed >100%
-  - [ ] Notify via console message
-  - [ ] Deny attempts at recording transactions in affected budget
+  - [x] Notify via console message
+  - [x] Deny attempts at recording transactions in affected budget
   
-- [ ] **Lockout - Account (Rebel)**
+- [x] **Lockout - Account (Rebel)**
     - exceed budget in 2+ categories = lock out from account
+  
+**TEST**
+- [x] handle string inputs for when we ask user for input
+- [x] handle negative values for when user tries to spend money
+- [x] test notifications
+  - if exceed budget category
+      - Troublemaker: >120%
+      - Rebel: >100%
+- [x] test warning
+  - if exceed % percentage
+      - Angel: >90%
+      - Troublemaker: >70%
+      - Rebel: >50%
+- [x]test lockouts
+  - Angel doesn't get locked out of budget or account
+  - Troublemaker gets locked out of budget but not account
+  - Rebel gets locked out of budget and account
+- clean up methods
+  - [x] record_transaction
+  - [x] on_complete
+  - [x] method visibilities are consistent
+  - [ ] getter/setter -> make consistent
+  - [x] user-type specific attributes (k)
+  
+- ascii art
+  - clean up notifications, bank details, transactions etc.
+  - ascii tables
+- UML diagram cleanup
+- move to new repo
+- make a proper readme file
+- add comments

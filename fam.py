@@ -52,15 +52,14 @@ class FAM:
         # register the user
         self.register_user()
 
-        # load test user
-        # test_user = load_test_user()
-        # self.add_user_to_list(test_user)
 
     def register_user(self):
         """
 
         :return:
         """
+        print("\n       Register a new user")
+        print("----------------------------------")
         print("Complete the following details for registration")
         user_name = input("Enter your Name:")
         user_age = int(input("Enter your Age:"))
@@ -104,6 +103,8 @@ class FAM:
             if self.current_user.can_lock_account():
                 raise UserIsLockedError("Your account is locked. We have logged you out")
 
+            print(f"\nLogged in as {self.current_user.name}")
+
             # options:
             print("""
             Actions menu:
@@ -114,7 +115,11 @@ class FAM:
             5 - Logout
             """)
 
-            option = int(input("Please enter the number your selection: "))
+            try:
+                option = int(input("Please enter the number your selection: "))
+            except ValueError:
+                print("Invalid choice. Please try again.")
+                continue
             # option 5 = LOGOUT, back to main menu
             if option == 5:
                 return
@@ -135,6 +140,8 @@ class FAM:
             self.current_user.view_transactions()
         elif option == 4:
             self.current_user.view_bank_details()
+        else:
+            print("Please enter a valid option.")
 
     def login_user(self):
         """
@@ -143,17 +150,20 @@ class FAM:
         # Display list of users and prompt an input
         print("---- Login Menu ----")
         for user in self.user_list:
-            print(f"{self.user_list.index(user) + 1} - {user.name} ({user.get_type()})")
+            print(f"{self.user_list.index(user) + 1} - {user}")
 
         # Exit if the last option is chosen
         choice_exit = len(self.user_list) + 1
         print(f"{choice_exit} - Back to main menu")
 
         valid_users = range(1, len(self.user_list) + 1)
-        print(x for x in valid_users)
 
         while True:
-            choice = int(input("Choose a user by entering the id: "))
+            try:
+                choice = int(input("Choose a user by entering the id: "))
+            except ValueError:
+                print("Invalid choice. Please try again.")
+                continue
 
             # Loop until a valid user is selected
             if choice in valid_users:
@@ -165,7 +175,6 @@ class FAM:
 
         # Set current user to selected user
         self.current_user = self.user_list[choice - 1]
-        print(f"\nLogged in as {self.current_user.name}")
         return True
 
     def show_main_menu(self):
@@ -173,16 +182,34 @@ class FAM:
         Show the main menu with options to register a new user,
         login, or exit the FAM application.
         """
-        # Prompt user to register or login
+
+        # Display a welcome message
+        print("""          
+       ___                       
+     /'___\                      
+    /\ \__/   __      ___ ___    
+    \ \ ,__\/'__`\  /' __` __`\  
+     \ \ \_/\ \L\.\_/\ \/\ \/\ \ 
+      \ \_\\ \__/.\_\ \_\ \_\ \_\\
+       \/_/ \/__/\/_/\/_/\/_/\/_/      
+              """)
+        print("       Family Appointed Moderator")
+        print("----------------------------------------")
+
+        # Prompt user to register, login, or exit the F.A.M.
         while True:
 
             print("""
-                    1 - Register new user
-                    2 - Login
-                    3 - Exit
+            1 - Register new user
+            2 - Login
+            3 - Exit
                   """)
 
-            choice = int(input("Enter your choice: "))
+            try:
+                choice = int(input("Enter your choice: "))
+            except ValueError:
+                print("Invalid choice. Please try again.")
+                continue
 
             if choice == 3:
                 return
@@ -193,7 +220,13 @@ class FAM:
                     1: self.register_user,
                     2: self.login_user,
                 }
-                operation = input_map[choice]
+                try:
+                    operation = input_map[choice]
+                except ValueError:
+                    print("Invalid choice. Please try again.")
+                    continue
+
+                # Move to the actions menu after a user is logged in or registered
                 if operation():
                     try:
                         self.show_actions_menu()
@@ -210,12 +243,6 @@ def main():
 
     # show main menu
     fam.show_main_menu()
-
-    # registers a user
-    # fam.show_registration_menu()
-
-    # shows the actions menu
-    # fam.show_actions_menu()
 
 
 if __name__ == '__main__':
