@@ -1,20 +1,11 @@
 """
-This module houses the FAM - the controller of the program.
+This module houses the FAM - contains the UI of the program.
 """
 
 from user import User, UserIsLockedError
 from angel import Angel
 from troublemaker import Troublemaker
 from rebel import Rebel
-
-
-def load_test_user():
-    """
-    Return a test user for developing purposes.
-
-    return: a test user as a User object
-    """
-    return User("Bob", 25)
 
 
 class FAM:
@@ -31,20 +22,44 @@ class FAM:
 
     @property
     def current_user(self):
+        """
+        Get the user that is currently logged in.
+        :return: a User
+        """
         return self._current_user
 
     @current_user.setter
     def current_user(self, user):
+        """
+        Set the user that is currently logged in.
+        :param user: a User
+        """
         self._current_user = user
 
-    def add_user_to_list(self, user):
+    @property
+    def user_list(self):
+        """
+        Retrieve the FAM user list.
+        :return: the user list as a list
+        """
+        return self._user_list
+
+    @user_list.setter
+    def user_list(self, user_list):
+        """
+        Set the user list to the value passed in.
+        :param user_list: a list of Users
+        """
+        self._user_list = user_list
+
+    def _add_user_to_list(self, user):
         """
         Add a user to the list.
         :param user: the User object to be added to the list of users
         """
         self._user_list.append(user)
 
-    def show_registration_menu(self):
+    def _show_registration_menu(self):
         """
         Show the menu for registering a new user to the system.
         """
@@ -52,54 +67,51 @@ class FAM:
         # register the user
         self.register_user()
 
-
-    def register_user(self):
+    def _register_user(self):
         """
-
-        :return:
+        Prompt user to enter their details and add them to the user list.
+        :return: True always
         """
         print("\n       Register a new user")
         print("----------------------------------")
         print("Complete the following details for registration")
-        user_name = input("Enter your Name:")
-        user_age = int(input("Enter your Age:"))
-        user_type = int(input("""Enter your User Type:
-                          1 - Angel
-                          2 - Troublemaker
-                          3 - Rebel
-                          """))
+        while True:
+            try:
+                user_name = input("Enter your Name:")
+                user_age = int(input("Enter your Age:"))
+                user_type = int(input("""Enter your User Type:
+                                  1 - Angel
+                                  2 - Troublemaker
+                                  3 - Rebel
+                                  """))
+            except ValueError as e:
+                print("Please input age and user type as integers")
+                continue
 
-        if user_type == 1:
-            user = Angel(user_name, user_age)
-        elif user_type == 2:
-            user = Troublemaker(user_name, user_age)
-        elif user_type == 3:
-            user = Rebel(user_name, user_age)
+            if user_type == 1:
+                user = Angel(user_name, user_age)
+                break
+            elif user_type == 2:
+                user = Troublemaker(user_name, user_age)
+                break
+            elif user_type == 3:
+                user = Rebel(user_name, user_age)
+                break
+            else:
+                print("\nPlease try again and choose a valid user type.")
 
         self.current_user = user
-        self.add_user_to_list(user)
+        self._add_user_to_list(user)
+
         return True
 
-    @property
-    def user_list(self):
-        """
-        Retrieve the FAM user list.
-        :return: the user list as an array
-        """
-        return self._user_list
-
-    @user_list.setter
-    def user_list(self, user_list):
-        self._user_list = user_list
-
-    def show_actions_menu(self):
+    def _show_actions_menu(self):
         """
         Show the actions menu and takes input from the user.
-        :return:
         """
         while True:
             # Check if a user is locked, if so exit out of the actions menu
-            print("locked:", self.current_user.get_locked_budgets())
+            print("locked:", self.current_user.locked_budgets)
             if self.current_user.can_lock_account():
                 raise UserIsLockedError("Your account is locked. We have logged you out")
 
@@ -127,7 +139,7 @@ class FAM:
                 # performs the action selected by the user.
                 self.perform_action(option)
 
-    def perform_action(self, option):
+    def _perform_action(self, option):
         """
         Perform an action based on the option selected by a user.
         :param option: an int
@@ -143,9 +155,10 @@ class FAM:
         else:
             print("Please enter a valid option.")
 
-    def login_user(self):
+    def _login_user(self):
         """
         Select a user from the user list to log in.
+        :return: True if the login process succeeds, False otherwise
         """
         # Display list of users and prompt an input
         print("---- Login Menu ----")
@@ -157,7 +170,7 @@ class FAM:
         print(f"{choice_exit} - Back to main menu")
 
         valid_users = range(1, len(self.user_list) + 1)
-
+        choice = 0
         while True:
             try:
                 choice = int(input("Choose a user by entering the id: "))
@@ -196,7 +209,7 @@ class FAM:
         print("       Family Appointed Moderator")
         print("----------------------------------------")
 
-        # Prompt user to register, login, or exit the F.A.M.
+        # Prompt user to register, login, or exit the F.A.M until they choose a valid option.
         while True:
 
             print("""
@@ -213,13 +226,15 @@ class FAM:
 
             if choice == 3:
                 return
-            elif 0 > choice > 3:
-                print("Invalid")
+            elif choice > 3 or choice < 0:
+                print("Invalid choice. Please try again.")
             else:
                 input_map = {
                     1: self.register_user,
                     2: self.login_user,
                 }
+
+                # Catch any string values
                 try:
                     operation = input_map[choice]
                 except ValueError:
@@ -229,21 +244,14 @@ class FAM:
                 # Move to the actions menu after a user is logged in or registered
                 if operation():
                     try:
-                        self.show_actions_menu()
+                        self._show_actions_menu()
                     except UserIsLockedError as e:
                         print(e)
 
-
-def main():
-    """
-    Runner function of the FAM system.
-    """
-
-    fam = FAM()
-
-    # show main menu
-    fam.show_main_menu()
-
-
-if __name__ == '__main__':
-    main()
+    @staticmethod
+    def load_test_user():
+        """
+        Return a test user for developing purposes.
+        return: a test user as a User object
+        """
+        return Angel("Bob", 25)

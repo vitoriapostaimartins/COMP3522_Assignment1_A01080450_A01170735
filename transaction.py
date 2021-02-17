@@ -21,8 +21,45 @@ class Transaction:
         self._dollar_amount = dollar_amount
         self._purchase_location = purchase_location
 
+    @property
+    def category(self):
+        """
+        Return the budget category name that the Transaction belongs to.
+        :return: a string
+        """
+        return self._category
+
+    @property
+    def purchase_location(self):
+        """
+        Return the name of the website/shop where the Transaction took place.
+        :return: a string
+        """
+        return self._purchase_location
+
+    @property
+    def timestamp(self):
+        """
+        Get the timestamp of the transaction
+        :return: a datetime
+        """
+        return self._timestamp
+
+    @property
+    def dollar_amount(self):
+        """
+        Return the dollar amount spent in the transaction.
+        :return: a float
+        """
+        return self._dollar_amount
+
     def __str__(self):
-        return f"\nCategory: {self._category}\n" \
-               f"Time: {self._timestamp}\n" \
-               f"Amount: {self._dollar_amount} \n" \
-               f"Location: {self._purchase_location}\n"
+        """
+        Return the transaction details as a string.
+        :return: a string
+        """
+        time = self.timestamp.strftime("%b %d %Y %H:%M:%S")
+        return f"\nCategory: {self.category}\n" \
+               f"Time: {time}\n" \
+               f"Amount: {self.dollar_amount} \n" \
+               f"Location: {self.purchase_location}\n"
