@@ -1,6 +1,7 @@
 """This module holds the Budget class"""
 
 from transaction import Transaction
+from tabulate import tabulate
 
 
 class Budget:
@@ -128,8 +129,9 @@ class Budget:
         :return: a string
         """
         transaction_string = ''
+        print(f"\nTransactions for: {self.name}")
         for transaction in self.transactions:
-            transaction_string += "Transaction: \n" + str(transaction)
+            transaction_string += str(transaction)
         return transaction_string
 
     def update_balance(self, amount):
@@ -146,5 +148,11 @@ class Budget:
         Build and return a string that describes this Budget
         :return: a string
         """
-        return f"""The budget {self.name} (locked: {self.is_locked}) has a limit of {self.limit}. The user has spent 
-                "{self.amount_spent} dollars and there are {self.amount_left} dollars left"""
+    #     return f"""The budget {self.name} (locked: {self.is_locked}) has a limit of {self.limit}. The user has spent
+    #             "{self.amount_spent} dollars and there are {self.amount_left} dollars left"""
+        locked = "Yes" if self.is_locked else "No"
+        budget_string = tabulate(
+            [["Category", f"{self.name}"], ["Locked", f"{locked}"], ["Limit in dollars", f"{self.limit}"],
+             ["Amount Spent in dollars", f"{self.amount_spent}"], ["Amount left in dollars", f"{self.amount_left}"]],
+            tablefmt="grid")
+        return budget_string

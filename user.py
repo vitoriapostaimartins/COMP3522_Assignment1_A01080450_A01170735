@@ -5,7 +5,7 @@ import abc
 
 from Assignments.Assignment1.notifications import Notifications
 from bankaccount import BankAccount, BudgetIsLockedError
-from bankaccount import NegativeBalanceError
+from bankaccount import InvalidBalanceError
 from abc import ABC
 
 
@@ -27,7 +27,7 @@ class User(ABC):
         self._locked_budgets = 0
 
         # creating the user's bank account
-        self._bank = self.input_bank_details()
+        self._bank = self._validate_bank_details()
 
     @property
     def percentage_warning(self):
@@ -127,7 +127,7 @@ class User(ABC):
         """
         try:
             self.bank.record_transaction(self)
-        except NegativeBalanceError as e:
+        except InvalidBalanceError as e:
             print(e)
         except BudgetIsLockedError as e:
             print(e)
@@ -167,6 +167,8 @@ class User(ABC):
                 bank_number = input("Please enter the bank number: ")
                 name = input("Please enter the name of the bank: ")
                 balance = float(input("Please enter the bank balance: "))
+                if balance <= 0:
+                    raise InvalidBalanceError("Balance must be a positive non-zero value")
             except ValueError:
                 print("One or more of the values was invalid. Please try again.")
                 continue
@@ -184,12 +186,25 @@ class User(ABC):
         bank_account = BankAccount(bank_number, name, balance)
         return bank_account
 
+    def _validate_bank_details(self):
+        while True:
+            try:
+                bank_details = self.input_bank_details()
+            except InvalidBalanceError as e:
+                print(e)
+            else:
+                break
+        return bank_details
+
+
     def __str__(self):
         """
         Build and returns a string with the User information.
         :return: the user information as a string
         """
         return f"{self.name}  ({self.get_type()})"
+
+
 
 
 class UserIsLockedError(Exception):

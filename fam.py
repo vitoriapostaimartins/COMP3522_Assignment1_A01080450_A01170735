@@ -65,7 +65,7 @@ class FAM:
         """
 
         # register the user
-        self.register_user()
+        self._register_user()
 
     def _register_user(self):
         """
@@ -79,12 +79,12 @@ class FAM:
             try:
                 user_name = input("Enter your Name:")
                 user_age = int(input("Enter your Age:"))
-                user_type = int(input("""Enter your User Type:
-                                  1 - Angel
-                                  2 - Troublemaker
-                                  3 - Rebel
-                                  """))
-            except ValueError as e:
+                print("Enter your User Type: \n"
+                      "1 - Angel \n"
+                      "2 - Troublemaker \n"
+                      "3 - Rebel \n")
+                user_type = int(input())
+            except ValueError:
                 print("Please input age and user type as integers")
                 continue
 
@@ -111,21 +111,20 @@ class FAM:
         """
         while True:
             # Check if a user is locked, if so exit out of the actions menu
-            print("locked:", self.current_user.locked_budgets)
             if self.current_user.can_lock_account():
                 raise UserIsLockedError("Your account is locked. We have logged you out")
 
-            print(f"\nLogged in as {self.current_user.name}")
+            print(f"\nLogged in as {self.current_user.name}\n")
 
             # options:
-            print("""
-            Actions menu:
-            1 - View budgets
-            2 - Record transaction
-            3 - View transactions by budget
-            4 - View bank account details
-            5 - Logout
-            """)
+            print("Actions menu:\n"
+                  "----------------\n"
+                  "1 - View budgets\n"
+                  "2 - Record transaction\n"
+                  "3 - View transactions by budget\n"
+                  "4 - View bank account details\n"
+                  "5 - Logout\n"
+                  )
 
             try:
                 option = int(input("Please enter the number your selection: "))
@@ -137,7 +136,7 @@ class FAM:
                 return
             else:
                 # performs the action selected by the user.
-                self.perform_action(option)
+                self._perform_action(option)
 
     def _perform_action(self, option):
         """
@@ -161,7 +160,7 @@ class FAM:
         :return: True if the login process succeeds, False otherwise
         """
         # Display list of users and prompt an input
-        print("---- Login Menu ----")
+        print("\n---- Login Menu ----")
         for user in self.user_list:
             print(f"{self.user_list.index(user) + 1} - {user}")
 
@@ -175,7 +174,7 @@ class FAM:
             try:
                 choice = int(input("Choose a user by entering the id: "))
             except ValueError:
-                print("Invalid choice. Please try again.")
+                print("\nInvalid choice. Please try again.")
                 continue
 
             # Loop until a valid user is selected
@@ -184,7 +183,7 @@ class FAM:
             elif choice == choice_exit:
                 return False
             else:
-                print("Please enter a valid option")
+                print("\nPlease enter a valid option")
 
         # Set current user to selected user
         self.current_user = self.user_list[choice - 1]
@@ -206,32 +205,31 @@ class FAM:
       \ \_\\ \__/.\_\ \_\ \_\ \_\\
        \/_/ \/__/\/_/\/_/\/_/\/_/      
               """)
-        print("       Family Appointed Moderator")
-        print("----------------------------------------")
 
         # Prompt user to register, login, or exit the F.A.M until they choose a valid option.
         while True:
-
-            print("""
-            1 - Register new user
-            2 - Login
-            3 - Exit
-                  """)
+            print("\n       Family Appointed Moderator")
+            print("----------------------------------------")
+            print(
+                "1 - Register new user\n"
+                "2 - Login\n"
+                "3 - Exit\n"
+            )
 
             try:
                 choice = int(input("Enter your choice: "))
             except ValueError:
-                print("Invalid choice. Please try again.")
+                print("\nInvalid choice. Please try again.")
                 continue
 
             if choice == 3:
                 return
             elif choice > 3 or choice < 0:
-                print("Invalid choice. Please try again.")
+                print("\nInvalid choice. Please try again.")
             else:
                 input_map = {
-                    1: self.register_user,
-                    2: self.login_user,
+                    1: self._register_user,
+                    2: self._login_user,
                 }
 
                 # Catch any string values

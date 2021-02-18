@@ -22,7 +22,7 @@ class BankAccount:
         :param name: a string
         :param balance: a float
         """
-        self._budgets = self.input_budget_details()
+        self._budgets = self._create_budget_list()
         self._number = number
         self._name = name
         self._balance = balance
@@ -118,7 +118,7 @@ class BankAccount:
             raise BudgetIsLockedError("Budget is locked.")
         else:
             if self.balance < amount:
-                raise NegativeBalanceError("Transaction not processed. Amount would put balance below 0.")
+                raise InvalidBalanceError("Transaction not processed. Amount would put balance below 0.")
             else:
                 self._complete_transaction(user, amount, budget_index, budget, timestamp, purchase_location)
 
@@ -142,7 +142,7 @@ class BankAccount:
         :param user: a user
         :param budget: a Budget
         """
-        print("Transaction successful.")
+        print("\nTransaction successful.")
         budget_balance = budget.amount_left
         percent = (budget.amount_spent / budget.limit) * BankAccount.PERCENT
 
@@ -252,7 +252,8 @@ class BankAccount:
         """
 
         # Print out budget options
-        print("Budget Options:\n"
+        print("\nBudget Options:\n"
+              "--------------------\n"
               "1 - Games and Entertainment\n"
               "2 - Clothing and Accessories\n"
               "3 - Eating Out\n"
@@ -284,18 +285,22 @@ class BankAccount:
         while True:
             try:
                 print("\nEnter the budget limit for the given category:")
+
                 cat_one = float(input("Games and Entertainment: "))
-                budget_list.append(Budget("Games and Entertainment", cat_one))
                 cat_two = float(input("Clothing and Accessories: "))
-                budget_list.append(Budget("Clothing and Accessories", cat_two))
                 cat_three = float(input("Eating Out: "))
-                budget_list.append(Budget("Eating Out", cat_three))
                 cat_four = float(input("Miscellaneous: "))
-                budget_list.append(Budget("Miscellaneous", cat_four))
+
+                if cat_one <= 0 or cat_two <= 0 or cat_three <= 0 or cat_four <= 0:
+                    raise InvalidBalanceError("Budget limit has to be a positive non-zero value.")
             except ValueError:
                 print("One or more of the values were incorrect. Please try again.")
                 continue
             else:
+                budget_list.append(Budget("Games and Entertainment", cat_one))
+                budget_list.append(Budget("Clothing and Accessories", cat_two))
+                budget_list.append(Budget("Eating Out", cat_three))
+                budget_list.append(Budget("Miscellaneous", cat_four))
                 break
 
         return budget_list
@@ -318,15 +323,25 @@ class BankAccount:
                f"{transactions_string}\n" \
                f"Balance: {self.balance}"
 
+    def _create_budget_list(self):
+        while True:
+            try:
+                budget_list = self.input_budget_details()
+            except InvalidBalanceError as e:
+                print(e)
+            else:
+                break
+        return budget_list
 
-class NegativeBalanceError(Exception):
+
+class InvalidBalanceError(Exception):
     """
-    Exception for when the user tries to make a transaction that would result in a negative bank balance.
+    Exception for when the user tries to input a value that would result in a negative or zero bank/budget balance.
     """
 
     def __init__(self, message):
         """
-        Initialize a NegativeBalanceError Exception and passes in a message to its parent class (Exception).
+        Initialize a InvalidBalanceError Exception and passes in a message to its parent class (Exception).
         :param message: description of the exception as a string
         """
         super().__init__(message)
