@@ -126,6 +126,7 @@ class BankAccount:
         """
         Complete a transaction by updating the bank balance, recording the transaction in the
         specified budget, and running checks on completions.
+        :param user: a User
         :param amount: a float
         :param budget_index: an int
         :param budget: a Budget

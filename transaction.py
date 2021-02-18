@@ -65,26 +65,5 @@ class Transaction:
         transaction_string = tabulate(
             [["Category", f"{self.category}"], ["Time", f"{time}"], ["Amount", f"{self.dollar_amount}"],
              ["Location", f"{self.purchase_location}"]], tablefmt="grid")
-        # return f"\nCategory: {self.category}\n" \
-        #        f"Time: {time}\n" \
-        #        f"Amount: {self.dollar_amount} \n" \
-        #        f"Location: {self.purchase_location}\n"
 
         return transaction_string
-
-#     """
-#
-# +-----------+---------+------------------------+----------------+
-# |           |         |          Col3          | Numeric Column |
-# +----------------------------------+---------+-------------------
-# | Category  | Value 2 | 123                    |           10.0 |
-# | Time      | cols    | with a tab or 4 spaces |       -2,027.1 |
-# | Amount    |         |                        |                |
-# +-----------+---------+------------------------+----------------+
-#
-#
-#     """
-#
-#     """
-#
-#     """
