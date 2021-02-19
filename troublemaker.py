@@ -1,7 +1,7 @@
 """
 This module holds the Troublemaker user type.
 """
-from Assignments.Assignment1.notifications import Notifications
+from notifications import Notifications
 from user import User
 
 

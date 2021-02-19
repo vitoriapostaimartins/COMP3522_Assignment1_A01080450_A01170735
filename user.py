@@ -3,7 +3,7 @@ This module holds the User class.
 """
 import abc
 
-from Assignments.Assignment1.notifications import Notifications
+from notifications import Notifications
 from bankaccount import BankAccount, BudgetIsLockedError
 from bankaccount import InvalidBalanceError
 from abc import ABC
