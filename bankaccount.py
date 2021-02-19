@@ -322,7 +322,7 @@ class BankAccount:
                f"Transactions by Budget \n" \
                f"----------------------------- \n" \
                f"{transactions_string}\n" \
-               f"Balance: {self.balance}\n"
+               f"Balance: {self.balance:.2f}\n"
 
     def _create_budget_list(self):
         while True:
