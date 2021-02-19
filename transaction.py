@@ -63,7 +63,7 @@ class Transaction:
         """
         time = self.timestamp.strftime("%b %d %Y %H:%M:%S")
         transaction_string = tabulate(
-            [["Category", f"{self.category}"], ["Time", f"{time}"], ["Amount", f"{self.dollar_amount}"],
+            [["Category", f"{self.category}"], ["Time", f"{time}"], ["Amount", f"${self.dollar_amount:.2f}"],
              ["Location", f"{self.purchase_location}"]], tablefmt="grid")
 
         return transaction_string

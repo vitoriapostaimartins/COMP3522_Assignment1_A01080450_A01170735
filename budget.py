@@ -129,9 +129,8 @@ class Budget:
         :return: a string
         """
         transaction_string = ''
-        print(f"\nTransactions for: {self.name}")
         for transaction in self.transactions:
-            transaction_string += str(transaction)
+            transaction_string += f"{str(transaction)}\n"
         return transaction_string
 
     def update_balance(self, amount):
@@ -150,7 +149,7 @@ class Budget:
         """
         locked = "Yes" if self.is_locked else "No"
         budget_string = tabulate(
-            [["Category", f"{self.name}"], ["Locked", f"{locked}"], ["Limit in dollars", f"{self.limit}"],
-             ["Amount Spent in dollars", f"{self.amount_spent}"], ["Amount left in dollars", f"{self.amount_left}"]],
+            [["Category", f"{self.name}"], ["Locked", f"{locked}"], ["Limit in dollars", f"${self.limit:.2f}"],
+             ["Amount spent in dollars", f"${self.amount_spent:.2f}"], ["Amount left in dollars", f"${self.amount_left:.2f}"]],
             tablefmt="grid")
         return budget_string

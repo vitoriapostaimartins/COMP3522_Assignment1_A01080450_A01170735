@@ -315,14 +315,14 @@ class BankAccount:
         transactions_list = [budget.get_transactions_string() for budget in self.budgets]
         transactions_string = "\n ".join(transactions_list)
 
-        return f"Viewing Bank Account Details \n" \
+        return f"\nViewing Bank Account Details \n" \
                f"---------------------------- \n" \
                f"\nNumber: {self.number}\n" \
                f"Name: {self.name}\n" \
                f"Transactions by Budget \n" \
                f"----------------------------- \n" \
                f"{transactions_string}\n" \
-               f"Balance: {self.balance}"
+               f"Balance: {self.balance}\n"
 
     def _create_budget_list(self):
         while True:
